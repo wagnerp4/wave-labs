@@ -1,0 +1,48 @@
+---
+import Base from "../layouts/Base.astro";
+import { InstallCommand } from "../components/InstallCommand.tsx";
+
+const releases = "https://github.com/heojiNn/voice-labs/releases/latest";
+
+const targets = [
+  { os: "Linux", formats: [".AppImage", ".deb", ".rpm"], arch: "x86_64", note: "Ubuntu 22.04+, Fedora 39+, Arch" },
+  { os: "Windows", formats: [".msi", ".exe (NSIS)"], arch: "x64", note: "Windows 10 and 11" },
+  { os: "macOS", formats: [".dmg"], arch: "Apple Silicon · Intel", note: "macOS 12+" },
+  { os: "Docker", formats: ["engine image"], arch: "x86_64 · arm64", note: "Local API only, no UI" }
+];
+---
+
+<Base title="Download">
+  <header class="max-w-2xl">
+    <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-signal-500">desktop</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight">Download voice-labs</h1>
+    <p class="mt-4 text-base leading-relaxed text-ink-300">
+      Local. No account. Builds are produced by GitHub Actions from tagged releases.
+    </p>
+  </header>
+
+  <div class="mt-10 grid gap-3 sm:grid-cols-2">
+    {
+      targets.map((t) => (
+        <a
+          href={releases}
+          target="_blank"
+          rel="noreferrer"
+          class="vl-focus group rounded-card border border-ink-700 bg-ink-900 p-5 shadow-card transition-colors hover:border-ink-500"
+        >
+          <div class="flex items-start justify-between">
+            <h2 class="text-lg font-medium">{t.os}</h2>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-ink-400">{t.arch}</span>
+          </div>
+          <p class="mt-2 font-mono text-[12px] text-signal-400">{t.formats.join("  ·  ")}</p>
+          <p class="mt-3 text-sm text-ink-300">{t.note}</p>
+        </a>
+      ))
+    }
+  </div>
+
+  <section class="mt-14 max-w-2xl">
+    <h2 class="text-xl font-semibold tracking-tight">Command line</h2>
+    <InstallCommand client:load className="mt-4" />
+  </section>
+</Base>

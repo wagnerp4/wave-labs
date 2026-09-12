@@ -1,0 +1,28 @@
+{
+  "name": "voice-labs",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local-first speech lab: TTS, ASR and voice tooling with Hugging Face models. Website, desktop app and local API.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter @voicelabs/web dev",
+    "dev:desktop": "pnpm --filter @voicelabs/desktop dev",
+    "dev:desktop:tauri": "pnpm --filter @voicelabs/desktop tauri dev",
+    "build": "pnpm -r --filter \"./apps/*\" build",
+    "build:web": "pnpm --filter @voicelabs/web build",
+    "build:desktop": "pnpm --filter @voicelabs/desktop build",
+    "build:desktop:tauri": "pnpm --filter @voicelabs/desktop tauri build",
+    "typecheck": "pnpm -r typecheck",
+    "registry:validate": "pnpm --filter @voicelabs/registry validate",
+    "engine:sync": "uv sync --directory engine",
+    "engine:serve": "uv run --directory engine voicelabs-engine serve",
+    "engine:lint": "uv run --directory engine ruff check ."
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

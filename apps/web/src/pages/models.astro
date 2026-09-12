@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+import { ModelCatalog } from "@voicelabs/ui";
+import { registry } from "@voicelabs/registry";
+---
+
+<Base title="Models and engines" description="Catalog of TTS and ASR adapters supported by voice-labs, with hardware and license information.">
+  <header class="max-w-2xl">
+    <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-signal-500">catalog v{registry.version}</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight">Models and engines</h1>
+    <p class="mt-4 text-base leading-relaxed text-ink-300">
+      Every adapter the desktop app and the local API know about. Status reflects the engine
+      implementation, not whether weights are on your disk.
+    </p>
+  </header>
+
+  <div class="mt-10">
+    <ModelCatalog client:load />
+  </div>
+
+  <p class="mt-12 max-w-2xl font-mono text-[11px] leading-relaxed text-ink-400">
+    Catalog snapshot from packages/registry/adapters.json, validated in CI. Listing an adapter does not
+    promise it is installed, compatible with your hardware, or licensed for your use case. Check the
+    linked model card.
+  </p>
+</Base>

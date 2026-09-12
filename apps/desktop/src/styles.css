@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@voicelabs/ui/theme.css";
+
+@source "../../../packages/ui/src";
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  user-select: none;
+}
+
+textarea,
+input,
+[contenteditable] {
+  user-select: text;
+}

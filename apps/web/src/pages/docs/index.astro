@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const guides = [
+  {
+    n: "01",
+    title: "Make your first voice",
+    body: "Install an engine, pick a voice, turn a short script into audio.",
+    meta: "5 min · first run"
+  },
+  {
+    n: "02",
+    title: "Clone or design a voice",
+    body: "Start from a clean reference clip, or describe a new speaker from scratch.",
+    meta: "voice workspace"
+  },
+  {
+    n: "03",
+    title: "Transcribe a folder",
+    body: "Batch audio and video into timestamped text. Export SRT, VTT or JSON.",
+    meta: "batch workflow"
+  },
+  {
+    n: "04",
+    title: "Use the local API",
+    body: "Point an OpenAI SDK at localhost and swap engines without changing code.",
+    meta: "developers"
+  }
+];
+---
+
+<Base title="Docs">
+  <div class="grid gap-10 lg:grid-cols-[1fr_2fr]">
+    <aside class="rounded-card border border-ink-700 bg-ink-900 p-8">
+      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-signal-500">desktop field manual</p>
+      <h1 class="mt-4 text-5xl font-semibold leading-[1.02] tracking-tight">From download to finished audio.</h1>
+      <p class="mt-6 text-sm leading-relaxed text-ink-300">
+        Screen-by-screen guides for the local app, written around the controls you will actually see.
+      </p>
+    </aside>
+
+    <ol class="divide-y divide-ink-800 rounded-card border border-ink-700 bg-ink-900">
+      {
+        guides.map((g) => (
+          <li class="grid gap-4 p-6 sm:grid-cols-[3rem_1fr_auto] sm:items-center">
+            <span class="font-mono text-[11px] text-ink-400">{g.n}</span>
+            <div>
+              <h2 class="text-xl font-medium">{g.title}</h2>
+              <p class="mt-1 text-sm text-ink-300">{g.body}</p>
+            </div>
+            <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">{g.meta} →</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <p class="mt-10 font-mono text-[11px] text-ink-400">
+    Guide pages are not written yet. This index fixes the structure and order.
+  </p>
+</Base>

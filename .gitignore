@@ -1,0 +1,41 @@
+# Node
+node_modules/
+dist/
+.astro/
+*.tsbuildinfo
+.turbo/
+
+# Tauri / Rust
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/schemas/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+engine/.venv/
+engine/dist/
+engine/build/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+
+# Models and generated audio
+.voicelabs/
+models/
+outputs/
+*.wav
+*.mp3
+*.flac
+!apps/web/public/**/*.wav
+
+# Editors and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+.env
+.env.*
+!.env.example

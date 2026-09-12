@@ -1,0 +1,118 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-ink-950: #07080a;
+  --color-ink-900: #0c0e12;
+  --color-ink-850: #10131a;
+  --color-ink-800: #141821;
+  --color-ink-700: #1c212c;
+  --color-ink-600: #2a3040;
+  --color-ink-500: #414a5e;
+  --color-ink-400: #7a8399;
+  --color-ink-300: #9ca4b6;
+  --color-ink-200: #c3c8d3;
+  --color-ink-100: #e2e3e6;
+  --color-ink-50: #f1efe9;
+
+  --color-signal-300: #ffd98a;
+  --color-signal-400: #f7c86e;
+  --color-signal-500: #f2b34c;
+  --color-signal-600: #d7962f;
+  --color-signal-700: #a8711c;
+
+  --color-phosphor-400: #7ff0b2;
+  --color-phosphor-500: #4fd995;
+
+  --color-danger-400: #ff6b7a;
+  --color-danger-500: #e84a5b;
+
+  --color-info-400: #7fb8ff;
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset, 0 12px 30px -18px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 0 1px rgba(242, 179, 76, 0.35), 0 0 32px -8px rgba(242, 179, 76, 0.45);
+}
+
+:root {
+  color-scheme: dark;
+  --vl-grid: rgba(255, 255, 255, 0.035);
+}
+
+html {
+  background: var(--color-ink-950);
+  color: var(--color-ink-50);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+::selection {
+  background: rgba(242, 179, 76, 0.28);
+  color: var(--color-ink-50);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-600) transparent;
+}
+
+.vl-grid-bg {
+  background-image:
+    linear-gradient(to right, var(--vl-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--vl-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
+}
+
+.vl-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.vl-focus {
+  outline: none;
+}
+
+.vl-focus:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-ink-950), 0 0 0 4px var(--color-signal-500);
+}
+
+@keyframes vl-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.vl-pulse {
+  animation: vl-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes vl-bars {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.vl-bar {
+  transform-origin: center;
+  animation: vl-bars 1.4s ease-in-out infinite;
+}
