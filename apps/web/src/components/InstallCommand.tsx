@@ -8,7 +8,7 @@ const COMMANDS: Record<Os, string> = {
   linux: "curl -fsSL https://voice-labs.sh/install | sh",
   macos: "curl -fsSL https://voice-labs.sh/install | sh",
   windows: "irm https://voice-labs.sh/install.ps1 | iex",
-  docker: "docker run -p 8471:8471 ghcr.io/heojinn/voice-labs-engine"
+  docker: "docker run -p 8471:8471 ghcr.io/wagnerp4/voice-labs-engine"
 };
 
 const LABELS: Record<Os, string> = {
