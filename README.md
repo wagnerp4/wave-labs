@@ -4,6 +4,8 @@ Local-first speech lab. Text to speech, transcription, voice cloning and voice d
 
 Status: structure, stack and UI scaffold. Two adapters have engine implementations (`kokoro`, `faster-whisper`), the rest of the catalog is listed as planned.
 
+Live site: [wagnerp4.github.io/voice-labs](https://wagnerp4.github.io/voice-labs/)
+
 ## Layout
 
 | Path | What | Stack |
