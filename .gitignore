@@ -21,7 +21,7 @@ engine/build/
 .pytest_cache/
 
 # Models and generated audio
-.voicelabs/
+.wavelabs/
 models/
 outputs/
 *.wav

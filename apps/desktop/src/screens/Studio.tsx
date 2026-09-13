@@ -1,7 +1,7 @@
 import { Download, Play, Square } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-import { Badge, Button, HardwareBadges, MonoLabel, Waveform, cn } from "@voicelabs/ui";
-import { adaptersByTask, type Adapter, type Hardware } from "@voicelabs/registry";
+import { Badge, Button, HardwareBadges, MonoLabel, Waveform, cn } from "@wavelabs/ui";
+import { adaptersByTask, type Adapter, type Hardware } from "@wavelabs/registry";
 import { synthesize, type EngineState } from "../lib/engineClient.ts";
 import { EmptyState, Panel } from "../components/Panel.tsx";
 
@@ -111,7 +111,7 @@ export function Studio({ engine, detected }: { engine: EngineState; detected: Ha
                   </div>
                   <a
                     href={t.url}
-                    download={`voice-labs-${t.adapter}-${t.createdAt}.wav`}
+                    download={`wave-labs-${t.adapter}-${t.createdAt}.wav`}
                     className="vl-focus rounded-md p-2 text-ink-400 hover:bg-ink-800 hover:text-ink-50"
                     aria-label="Download"
                   >

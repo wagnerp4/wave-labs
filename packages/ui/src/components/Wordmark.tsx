@@ -20,7 +20,7 @@ export function Wordmark({ className, compact = false }: { className?: string; c
       </svg>
       {!compact && (
         <span className="font-mono text-sm tracking-tight text-ink-50">
-          voice<span className="text-signal-500">-</span>labs
+          wave<span className="text-signal-500">-</span>labs
         </span>
       )}
     </span>

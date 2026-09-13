@@ -1,5 +1,5 @@
 ---
-import { Wordmark } from "@voicelabs/ui";
+import { Wordmark } from "@wavelabs/ui";
 
 const base = import.meta.env.BASE_URL;
 const path = Astro.url.pathname;
@@ -15,7 +15,7 @@ const isActive = (href: string) => path === href || path === `${href}/`;
 
 <header class="sticky top-0 z-30 border-b border-ink-800 bg-ink-950/80 backdrop-blur">
   <div class="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
-    <a href={base} class="vl-focus rounded-md" aria-label="voice-labs home">
+    <a href={base} class="vl-focus rounded-md" aria-label="wave-labs home">
       <Wordmark />
     </a>
     <nav class="flex items-center gap-1 text-sm">
@@ -33,7 +33,7 @@ const isActive = (href: string) => path === href || path === `${href}/`;
         ))
       }
       <a
-        href="https://github.com/wagnerp4/voice-labs"
+        href="https://github.com/wagnerp4/wave-labs"
         target="_blank"
         rel="noreferrer"
         class="vl-focus ml-2 hidden items-center gap-2 rounded-md border border-ink-700 px-3 py-1.5 font-mono text-xs text-ink-200 hover:border-ink-500 sm:inline-flex"

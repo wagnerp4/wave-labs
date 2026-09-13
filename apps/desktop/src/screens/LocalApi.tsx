@@ -1,4 +1,4 @@
-import { Badge, MonoLabel } from "@voicelabs/ui";
+import { Badge, MonoLabel } from "@wavelabs/ui";
 import { ENGINE_URL, type EngineState } from "../lib/engineClient.ts";
 import { Panel } from "../components/Panel.tsx";
 
@@ -17,7 +17,7 @@ client = OpenAI(base_url="${ENGINE_URL}/v1", api_key="local")
 speech = client.audio.speech.create(
     model="kokoro",
     voice="af_heart",
-    input="Hello from voice-labs.",
+    input="Hello from wave-labs.",
 )
 speech.write_to_file("hello.wav")`;
 

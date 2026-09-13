@@ -2729,7 +2729,7 @@ wheels = [
 ]
 
 [[package]]
-name = "voicelabs-engine"
+name = "wavelabs-engine"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -2788,7 +2788,7 @@ requires-dist = [
     { name = "torchaudio", marker = "extra == 'torch'", specifier = ">=2.4" },
     { name = "typer", specifier = ">=0.15" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32" },
-    { name = "voicelabs-engine", extras = ["torch", "kokoro", "whisper"], marker = "extra == 'all'" },
+    { name = "wavelabs-engine", extras = ["torch", "kokoro", "whisper"], marker = "extra == 'all'" },
 ]
 provides-extras = ["torch", "kokoro", "whisper", "all"]
 

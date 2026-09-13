@@ -55,9 +55,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: apps/desktop
-          tagName: ${{ github.ref_name }}
-          releaseName: "voice-labs ${{ github.ref_name }}"
-          releaseBody: "See CHANGELOG.md for details."
+          tagName: ${{ github.event_name == 'push' && github.ref_name || '' }}
+          releaseName: "wave-labs ${{ github.ref_name }}"
+          releaseBody: "Desktop installers for Linux (AppImage, deb, rpm), Windows (msi, nsis) and macOS (dmg)."
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

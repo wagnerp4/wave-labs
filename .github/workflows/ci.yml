@@ -41,5 +41,5 @@ jobs:
       - run: uv python install 3.12
       - run: uv sync
       - run: uv run ruff check .
-      - run: uv run voicelabs-engine models
-      - run: uv run voicelabs-engine hardware
+      - run: uv run wavelabs-engine models
+      - run: uv run wavelabs-engine hardware

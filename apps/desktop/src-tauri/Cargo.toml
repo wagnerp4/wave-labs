@@ -1,14 +1,14 @@
 [package]
-name = "voice-labs"
+name = "wave-labs"
 version = "0.1.0"
 description = "Local-first speech lab"
 authors = ["Philipp Wagner"]
-license = "MIT"
+license = "AGPL-3.0"
 edition = "2021"
 rust-version = "1.77"
 
 [lib]
-name = "voice_labs_lib"
+name = "wave_labs_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

@@ -1,7 +1,7 @@
 import { Download, ExternalLink } from "lucide-react";
 import { useState } from "react";
-import { Badge, Button, HardwareBadges, ModelCatalog, MonoLabel } from "@voicelabs/ui";
-import { hfUrl, type Adapter, type Hardware } from "@voicelabs/registry";
+import { Badge, Button, HardwareBadges, ModelCatalog, MonoLabel } from "@wavelabs/ui";
+import { hfUrl, type Adapter, type Hardware } from "@wavelabs/registry";
 import { Panel } from "../components/Panel.tsx";
 
 export function Models({ detected }: { detected: Hardware | null }) {

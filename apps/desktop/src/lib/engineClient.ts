@@ -1,4 +1,4 @@
-import type { Hardware } from "@voicelabs/registry";
+import type { Hardware } from "@wavelabs/registry";
 
 export const ENGINE_URL = import.meta.env.VITE_ENGINE_URL ?? "http://127.0.0.1:8471";
 

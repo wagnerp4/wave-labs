@@ -1,5 +1,5 @@
 import { ExternalLink } from "lucide-react";
-import { TASK_BADGES, hfUrl, type Adapter, type Hardware } from "@voicelabs/registry";
+import { TASK_BADGES, hfUrl, type Adapter, type Hardware } from "@wavelabs/registry";
 import { cn } from "../cn.ts";
 import { Badge } from "./Badge.tsx";
 import { Card } from "./Card.tsx";

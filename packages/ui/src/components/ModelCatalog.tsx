@@ -6,7 +6,7 @@ import {
   type Adapter,
   type Hardware,
   type Task
-} from "@voicelabs/registry";
+} from "@wavelabs/registry";
 import { cn } from "../cn.ts";
 import { Chip } from "./Chip.tsx";
 import { ModelCard } from "./ModelCard.tsx";

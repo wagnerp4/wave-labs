@@ -1,4 +1,4 @@
-import { Button } from "@voicelabs/ui";
+import { Button } from "@wavelabs/ui";
 import { EmptyState, Panel } from "../components/Panel.tsx";
 
 export function Logs() {

@@ -43,10 +43,10 @@ export function Settings() {
       <Panel label="storage">
         <div className="divide-y divide-ink-800">
           <Row label="Model cache" hint="Hugging Face weights. Shared with other HF tooling if you point it at HF_HOME.">
-            <input className={inputCls} defaultValue="~/.voicelabs/models" disabled />
+            <input className={inputCls} defaultValue="~/.wavelabs/models" disabled />
           </Row>
           <Row label="Outputs" hint="Rendered audio and transcripts.">
-            <input className={inputCls} defaultValue="~/.voicelabs/outputs" disabled />
+            <input className={inputCls} defaultValue="~/.wavelabs/outputs" disabled />
           </Row>
         </div>
       </Panel>

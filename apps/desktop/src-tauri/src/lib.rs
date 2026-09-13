@@ -1,4 +1,9 @@
+mod engine;
+
+use engine::{kill_on_exit, start_engine, stop_engine, EngineProcess};
 use serde::Serialize;
+use std::sync::Mutex;
+use tauri::Manager;
 
 #[derive(Serialize)]
 struct AppInfo {
@@ -14,17 +19,19 @@ fn app_info() -> AppInfo {
     }
 }
 
-// TODO: spawn the Python engine as a Tauri sidecar (tauri-plugin-shell `sidecar`) and
-// stream its stdout/stderr to the Logs screen via events.
-// TODO: pick a free port at startup and pass it to both the sidecar and the frontend.
-// TODO: expose `open_path` for the outputs directory using tauri-plugin-opener.
-
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![app_info])
+        .manage(EngineProcess(Mutex::new(None)))
+        .invoke_handler(tauri::generate_handler![app_info, start_engine, stop_engine])
+        .on_window_event(|window, event| {
+            if matches!(event, tauri::WindowEvent::Destroyed) {
+                if let Some(state) = window.app_handle().try_state::<EngineProcess>() {
+                    kill_on_exit(&state);
+                }
+            }
+        })
         .run(tauri::generate_context!())
-        .expect("error while running voice-labs");
+        .expect("error while running wave-labs");
 }

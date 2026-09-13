@@ -1,7 +1,7 @@
 import { FileAudio, Upload } from "lucide-react";
 import { useMemo, useState, type DragEvent } from "react";
-import { Badge, Button, cn } from "@voicelabs/ui";
-import { adaptersByTask } from "@voicelabs/registry";
+import { Badge, Button, cn } from "@wavelabs/ui";
+import { adaptersByTask } from "@wavelabs/registry";
 import { transcribe, type EngineState } from "../lib/engineClient.ts";
 import { EmptyState, Panel } from "../components/Panel.tsx";
 

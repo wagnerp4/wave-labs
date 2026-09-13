@@ -1,4 +1,4 @@
-import { Badge } from "@voicelabs/ui";
+import { Badge } from "@wavelabs/ui";
 import type { EngineState } from "../lib/engineClient.ts";
 import { NAV, type Screen } from "../lib/navigation.ts";
 

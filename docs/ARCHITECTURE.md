@@ -1,9 +1,9 @@
 # Architecture
 
-voice-labs is a monorepo with three deliverables that share one model catalog and one design system.
+wave-labs is a monorepo with three deliverables that share one model catalog and one design system.
 
 ```
-voice-labs/
+wave-labs/
 ├─ apps/
 │  ├─ web/        Astro 5 static site: landing, models catalog, docs, download
 │  └─ desktop/    Tauri 2 shell + Vite/React frontend, talks to the engine over HTTP
@@ -42,19 +42,20 @@ Status semantics:
 
 ## Engine
 
-- `config.py`: pydantic-settings, `VOICELABS_*` env vars, `~/.voicelabs` data dir.
-- `registry.py`: loads `adapters.json` from `VOICELABS_REGISTRY`, the packaged copy, or the repo path.
+- `config.py`: pydantic-settings, `WAVELABS_*` env vars, `~/.wavelabs` data dir.
+- `registry.py`: loads `adapters.json` from `WAVELABS_REGISTRY`, the packaged copy, or the repo path.
 - `hardware.py`: detects cuda, rocm, mps or cpu. Torch is optional.
 - `hub.py`: `snapshot_download` into the app cache.
 - `adapters/base.py`: `TTSAdapter` and `ASRAdapter` protocols plus `Audio`, `Transcript` dataclasses.
 - `adapters/__init__.py`: `FACTORIES` map and a lazy `AdapterPool`.
 - `api.py`: `/health`, `/v1/models`, `/v1/audio/speech`, `/v1/audio/transcriptions`.
+- `library/`: backend router plus Hugging Face and Ollama backends. Ollama is a stub.
 
 Adding an adapter: implement the protocol in `adapters/<id>.py`, register it in `FACTORIES`, add its optional dependency group in `pyproject.toml`, and flip its status in `adapters.json`.
 
 ## Desktop
 
-Tauri 2 gives native installers for `.deb`, `.rpm`, `.AppImage`, `.msi`, `.exe` and `.dmg` from one Rust shell. The Rust side is deliberately thin: one `app_info` command today, with TODOs for spawning the engine as a sidecar and streaming its logs. The frontend is plain React with local state. No router: screens are switched by a `Screen` union in `App.tsx`.
+Tauri 2 gives native installers for `.deb`, `.rpm`, `.AppImage`, `.msi`, `.exe` and `.dmg` from one Rust shell. The Rust side exposes `app_info`, `start_engine` and `stop_engine`. `start_engine` runs `uv run wavelabs-engine serve` against `engine/` (compile-time path, `WAVELABS_ENGINE_DIR`, or `engine/` next to the binary). A bundled sidecar is still open. The frontend is plain React with local state. Screens are switched by a `Screen` union in `App.tsx`.
 
 ## Web
 

@@ -1,9 +1,9 @@
 [project]
-name = "voicelabs-engine"
+name = "wavelabs-engine"
 version = "0.1.0"
-description = "Local speech engine for voice-labs: OpenAI-compatible TTS and ASR API over Hugging Face models."
+description = "Local speech engine for wave-labs: OpenAI-compatible TTS and ASR API over Hugging Face models."
 readme = "README.md"
-license = "MIT"
+license = "AGPL-3.0"
 requires-python = ">=3.10,<3.14"
 authors = [{ name = "Philipp Wagner" }]
 dependencies = [
@@ -22,20 +22,20 @@ dependencies = [
 torch = ["torch>=2.4", "torchaudio>=2.4"]
 kokoro = ["kokoro>=0.9", "soundfile>=0.12"]
 whisper = ["faster-whisper>=1.1"]
-all = ["voicelabs-engine[torch,kokoro,whisper]"]
+all = ["wavelabs-engine[torch,kokoro,whisper]"]
 
 [project.scripts]
-voicelabs-engine = "voicelabs_engine.cli:app"
+wavelabs-engine = "wavelabs_engine.cli:app"
 
 [build-system]
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/voicelabs_engine"]
+packages = ["src/wavelabs_engine"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"../packages/registry/adapters.json" = "voicelabs_engine/data/adapters.json"
+"../packages/registry/adapters.json" = "wavelabs_engine/data/adapters.json"
 
 [dependency-groups]
 dev = [

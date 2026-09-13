@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactNode } from "react";
-import { Card, MonoLabel, cn } from "@voicelabs/ui";
+import { Card, MonoLabel, cn } from "@wavelabs/ui";
 
 export function Panel({
   label,

@@ -46,7 +46,7 @@ def list_models() -> dict:
             {
                 "id": a.id,
                 "object": "model",
-                "owned_by": (a.hf_repo or "voice-labs").split("/")[0],
+                "owned_by": (a.hf_repo or "wave-labs").split("/")[0],
                 "task": a.task,
                 "status": a.status,
                 "hf_repo": a.hf_repo,

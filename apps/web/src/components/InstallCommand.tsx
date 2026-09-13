@@ -1,14 +1,14 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
-import { Chip, cn } from "@voicelabs/ui";
+import { Chip, cn } from "@wavelabs/ui";
 
 type Os = "linux" | "macos" | "windows" | "docker";
 
 const COMMANDS: Record<Os, string> = {
-  linux: "curl -fsSL https://voice-labs.sh/install | sh",
-  macos: "curl -fsSL https://voice-labs.sh/install | sh",
-  windows: "irm https://voice-labs.sh/install.ps1 | iex",
-  docker: "docker run -p 8471:8471 ghcr.io/wagnerp4/voice-labs-engine"
+  linux: "curl -fsSL https://wave-labs.sh/install | sh",
+  macos: "curl -fsSL https://wave-labs.sh/install | sh",
+  windows: "irm https://wave-labs.sh/install.ps1 | iex",
+  docker: "docker run -p 8471:8471 ghcr.io/wagnerp4/wave-labs-engine"
 };
 
 const LABELS: Record<Os, string> = {

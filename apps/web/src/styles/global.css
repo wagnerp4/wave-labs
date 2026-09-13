@@ -1,4 +1,4 @@
 @import "tailwindcss";
-@import "@voicelabs/ui/theme.css";
+@import "@wavelabs/ui/theme.css";
 
 @source "../../../../packages/ui/src";

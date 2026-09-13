@@ -23,10 +23,10 @@ importers:
       '@tauri-apps/plugin-shell':
         specifier: ^2.2.0
         version: 2.3.6
-      '@voicelabs/registry':
+      '@wavelabs/registry':
         specifier: workspace:*
         version: link:../../packages/registry
-      '@voicelabs/ui':
+      '@wavelabs/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       lucide-react:
@@ -75,10 +75,10 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.6
         version: 4.3.3(vite@6.4.3(@types/node@22.20.2)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13)(yaml@2.9.1))
-      '@voicelabs/registry':
+      '@wavelabs/registry':
         specifier: workspace:*
         version: link:../../packages/registry
-      '@voicelabs/ui':
+      '@wavelabs/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       astro:
@@ -131,7 +131,7 @@ importers:
       '@fontsource/jetbrains-mono':
         specifier: ^5.1.1
         version: 5.3.0
-      '@voicelabs/registry':
+      '@wavelabs/registry':
         specifier: workspace:*
         version: link:../registry
       clsx:

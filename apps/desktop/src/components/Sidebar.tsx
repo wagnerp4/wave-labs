@@ -1,4 +1,4 @@
-import { MonoLabel, StatusDot, Wordmark, cn } from "@voicelabs/ui";
+import { MonoLabel, StatusDot, Wordmark, cn } from "@wavelabs/ui";
 import type { EngineState } from "../lib/engineClient.ts";
 import { NAV, type Screen } from "../lib/navigation.ts";
 

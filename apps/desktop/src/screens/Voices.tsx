@@ -1,5 +1,5 @@
 import { Mic2, Sparkles, Upload } from "lucide-react";
-import { Badge, Button, Card, MonoLabel } from "@voicelabs/ui";
+import { Badge, Button, Card, MonoLabel } from "@wavelabs/ui";
 import { EmptyState, Panel } from "../components/Panel.tsx";
 
 const PRESETS = [

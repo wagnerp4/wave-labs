@@ -8,7 +8,7 @@ from .config import settings
 
 def create_app() -> FastAPI:
     settings.ensure_dirs()
-    app = FastAPI(title="voicelabs-engine", version=__version__)
+    app = FastAPI(title="wavelabs-engine", version=__version__)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[

@@ -1,10 +1,10 @@
-# voice-labs
+# wave-labs
 
-Local-first speech lab. Text to speech, transcription, voice cloning and voice design on top of Hugging Face models. One website, one desktop app for Linux, macOS and Windows, one OpenAI-compatible local API.
+Local-first speech lab. Text to speech, transcription, voice cloning and voice design on top of Hugging Face models. Website, GitHub, desktop executables for Linux / macOS / Windows, and an OpenAI-compatible local API. AGPL-3.0.
 
 Status: structure, stack and UI scaffold. Two adapters have engine implementations (`kokoro`, `faster-whisper`), the rest of the catalog is listed as planned.
 
-Live site: [wagnerp4.github.io/voice-labs](https://wagnerp4.github.io/voice-labs/)
+Live site: [wagnerp4.github.io/wave-labs](https://wagnerp4.github.io/wave-labs/)
 
 ## Layout
 
@@ -22,7 +22,7 @@ See `docs/ARCHITECTURE.md` for how the pieces fit.
 
 - Node 20+ and pnpm 9 (`corepack enable` or `npm i -g pnpm`)
 - uv (Python is managed by uv, 3.12 pinned in `engine/.python-version`)
-- For native desktop builds: Rust stable plus the Tauri 2 system dependencies for your OS
+- For native desktop builds: Rust stable plus the Tauri 2 system dependencies for your OS. On Debian/Ubuntu: `libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf pkg-config libssl-dev`
 
 ## Develop
 
@@ -37,6 +37,7 @@ pnpm dev:desktop:tauri  # native window, needs Rust
 
 pnpm engine:sync
 pnpm engine:serve       # http://127.0.0.1:8471
+pnpm build:desktop:tauri  # native installers (needs Rust + OS WebView deps)
 ```
 
 bash:

@@ -7,6 +7,7 @@ import { Launchpad } from "./screens/Launchpad.tsx";
 import { Studio } from "./screens/Studio.tsx";
 import { Transcribe } from "./screens/Transcribe.tsx";
 import { Voices } from "./screens/Voices.tsx";
+import { Audiobooks } from "./screens/Audiobooks.tsx";
 import { Models } from "./screens/Models.tsx";
 import { LocalApi } from "./screens/LocalApi.tsx";
 import { Logs } from "./screens/Logs.tsx";
@@ -27,6 +28,7 @@ export function App() {
           {screen === "studio" && <Studio engine={engine} detected={detected} />}
           {screen === "transcribe" && <Transcribe engine={engine} />}
           {screen === "voices" && <Voices />}
+          {screen === "audiobooks" && <Audiobooks />}
           {screen === "models" && <Models detected={detected} />}
           {screen === "api" && <LocalApi engine={engine} />}
           {screen === "logs" && <Logs />}

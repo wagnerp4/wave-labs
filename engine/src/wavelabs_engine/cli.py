@@ -3,7 +3,7 @@ import typer
 from . import __version__
 from .config import settings
 
-app = typer.Typer(help="voice-labs local speech engine", no_args_is_help=True)
+app = typer.Typer(help="wave-labs local speech engine", no_args_is_help=True)
 
 
 @app.command()
@@ -15,7 +15,7 @@ def serve(
     import uvicorn
 
     uvicorn.run(
-        "voicelabs_engine.server:app",
+        "wavelabs_engine.server:app",
         host=host,
         port=port,
         reload=reload,

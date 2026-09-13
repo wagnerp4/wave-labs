@@ -1,4 +1,4 @@
-import type { Hardware } from "@voicelabs/registry";
+import type { Hardware } from "@wavelabs/registry";
 import { cn } from "../cn.ts";
 
 const ALL: Hardware[] = ["cuda", "rocm", "mps", "cpu"];

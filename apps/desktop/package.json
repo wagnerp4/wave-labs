@@ -1,5 +1,5 @@
 {
-  "name": "@voicelabs/desktop",
+  "name": "@wavelabs/desktop",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,8 +14,8 @@
     "@tauri-apps/api": "^2.2.0",
     "@tauri-apps/plugin-opener": "^2.2.5",
     "@tauri-apps/plugin-shell": "^2.2.0",
-    "@voicelabs/registry": "workspace:*",
-    "@voicelabs/ui": "workspace:*",
+    "@wavelabs/registry": "workspace:*",
+    "@wavelabs/ui": "workspace:*",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

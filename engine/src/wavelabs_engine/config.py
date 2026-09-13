@@ -4,11 +4,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="VOICELABS_", env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="WAVELABS_", env_file=".env", extra="ignore")
 
     host: str = "127.0.0.1"
     port: int = 8471
-    data_dir: Path = Path.home() / ".voicelabs"
+    data_dir: Path = Path.home() / ".wavelabs"
     registry: Path | None = None
     device: str = "auto"
     log_level: str = "info"

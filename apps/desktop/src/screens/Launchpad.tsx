@@ -1,14 +1,16 @@
 import { ArrowRight } from "lucide-react";
-import { Badge, Button, Card, MonoLabel, Waveform } from "@voicelabs/ui";
-import { registry } from "@voicelabs/registry";
+import { useState } from "react";
+import { Badge, Button, Card, MonoLabel, Waveform } from "@wavelabs/ui";
+import { registry } from "@wavelabs/registry";
 import type { EngineState } from "../lib/engineClient.ts";
+import { isTauri, startEngine } from "../lib/tauri.ts";
 import { NAV, type Screen } from "../lib/navigation.ts";
 
 const QUICK: { id: Screen; title: string; body: string }[] = [
   { id: "studio", title: "Generate speech", body: "Script in, WAV out. Compare engines." },
   { id: "transcribe", title: "Transcribe audio", body: "Drop files, get timestamped text." },
   { id: "voices", title: "Clone or design a voice", body: "Reference clip or text description." },
-  { id: "models", title: "Install a model", body: "Pull weights from Hugging Face." }
+  { id: "audiobooks", title: "Produce an audiobook", body: "Manuscript in, chaptered audio out." }
 ];
 
 export function Launchpad({
@@ -19,6 +21,20 @@ export function Launchpad({
   engine: EngineState;
 }) {
   const experimental = registry.adapters.filter((a) => a.status !== "planned");
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
+
+  async function onStartEngine() {
+    setStarting(true);
+    setStartError(null);
+    try {
+      await startEngine();
+    } catch (e) {
+      setStartError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setStarting(false);
+    }
+  }
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-8">
@@ -89,14 +105,23 @@ export function Launchpad({
               </div>
             </dl>
           ) : (
-            <div className="mt-3 flex items-center justify-between gap-4">
-              <p className="text-[13px] text-ink-300">
-                No engine on <span className="font-mono">127.0.0.1:8471</span>. Run{" "}
-                <span className="font-mono text-ink-100">voicelabs-engine serve</span> or let the app spawn it.
-              </p>
-              <Button size="sm" variant="secondary" disabled title="Sidecar spawning is not wired yet">
-                Start engine
-              </Button>
+            <div className="mt-3 flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-[13px] text-ink-300">
+                  No engine on <span className="font-mono">127.0.0.1:8471</span>. Run{" "}
+                  <span className="font-mono text-ink-100">wavelabs-engine serve</span> or let the app spawn it.
+                </p>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={!isTauri() || starting}
+                  title={isTauri() ? "Spawn wavelabs-engine via uv" : "Open the desktop executable to spawn the engine"}
+                  onClick={() => void onStartEngine()}
+                >
+                  {starting ? "Starting" : "Start engine"}
+                </Button>
+              </div>
+              {startError && <p className="font-mono text-[11px] text-danger-400">{startError}</p>}
             </div>
           )}
         </Card>
