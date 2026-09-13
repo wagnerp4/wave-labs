@@ -30,7 +30,7 @@
   "bundle": {
     "active": true,
     "targets": ["deb", "rpm", "appimage", "msi", "nsis", "dmg"],
-    "category": "AudioVideo",
+    "category": "Music",
     "shortDescription": "Local-first speech lab",
     "longDescription": "Text to speech, transcription, voice cloning and voice design with Hugging Face models, running on your machine.",
     "icon": [
