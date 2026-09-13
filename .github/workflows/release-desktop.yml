@@ -15,12 +15,16 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-22.04
+            artifact: linux-x64
             args: ""
           - platform: windows-latest
+            artifact: windows-x64
             args: ""
           - platform: macos-latest
+            artifact: macos-arm64
             args: "--target aarch64-apple-darwin"
           - platform: macos-13
+            artifact: macos-x64
             args: "--target x86_64-apple-darwin"
     runs-on: ${{ matrix.platform }}
     steps:
@@ -46,18 +50,31 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # TODO: build the Python engine into a single-file sidecar (PyInstaller or uv-managed
-      # runtime) per platform and place it under apps/desktop/src-tauri/binaries before
-      # tauri-action runs. Until then, installers ship without a bundled engine.
+      # TODO: bundle the Python engine as a per-platform sidecar before tauri-action.
 
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: apps/desktop
-          tagName: ${{ github.event_name == 'push' && github.ref_name || '' }}
+          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
           releaseName: "wave-labs ${{ github.ref_name }}"
           releaseBody: "Desktop installers for Linux (AppImage, deb, rpm), Windows (msi, nsis) and macOS (dmg)."
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave-labs-${{ matrix.artifact }}
+          path: |
+            apps/desktop/src-tauri/target/**/release/bundle/msi/*.msi
+            apps/desktop/src-tauri/target/**/release/bundle/nsis/*.exe
+            apps/desktop/src-tauri/target/**/release/bundle/deb/*.deb
+            apps/desktop/src-tauri/target/**/release/bundle/rpm/*.rpm
+            apps/desktop/src-tauri/target/**/release/bundle/appimage/*.AppImage
+            apps/desktop/src-tauri/target/**/release/bundle/dmg/*.dmg
+            apps/desktop/src-tauri/target/**/release/bundle/macos/*.app
+          if-no-files-found: warn
+          compression-level: 0
