@@ -1,37 +1,50 @@
 ---
 import Base from "../layouts/Base.astro";
-import { InstallCommand } from "../components/InstallCommand.tsx";
 import { Waveform } from "@wavelabs/ui";
 import { registry } from "@wavelabs/registry";
 
 const base = import.meta.env.BASE_URL;
 const tts = registry.adapters.filter((a) => a.task === "tts").length;
 const asr = registry.adapters.filter((a) => a.task === "asr").length;
+const runnable = registry.adapters.filter((a) => a.status !== "planned");
+const runnableTts = runnable.filter((a) => a.task === "tts").length;
+const runnableAsr = runnable.filter((a) => a.task === "asr").length;
+
+// Mirrors the desktop sidebar in apps/desktop/src/lib/navigation.ts.
+const sidebar: { section: string | null; items: string[] }[] = [
+  { section: null, items: ["Launchpad", "Voices", "Studio"] },
+  { section: "tasks", items: ["Voice Creation", "Speech to Text", "Audiobooks"] },
+  { section: "manage", items: ["Models", "Local API", "Logs", "Settings"] }
+];
 
 const workflows = [
   {
-    title: "Speech studio",
-    body: "Type a script, pick a voice and an engine, render to WAV. Compare engines side by side."
+    title: "Studio",
+    body: "Type a script, pick a voice and an engine, render to WAV. Kokoro works out of the box; Chatterbox, F5, XTTS v2, Orpheus, Dia and more are experimental."
   },
   {
-    title: "Voice clone",
-    body: "Drop in a short reference clip. Clean it up, then clone with any adapter that supports it."
+    title: "Voices",
+    body: "Built-in reference voices plus your own. Drop in a short clip and clone it with any engine that supports cloning."
   },
   {
-    title: "Voice design",
-    body: "Describe a speaker in a sentence. Age, accent, pace, recording quality."
+    title: "Voice Creation",
+    body: "Describe a speaker in a sentence (age, accent, pace, recording quality) and generate a new voice from the text."
   },
   {
-    title: "Transcripts",
-    body: "Audio or video in, editable text with timestamps out. Batch folders overnight."
+    title: "Speech to Text",
+    body: "Drop audio or video in (wav, mp3, flac, m4a, mp4, mkv). Get segments with timestamps, export SRT, VTT or JSON."
   },
   {
-    title: "Model lab",
-    body: "Pull weights from Hugging Face, check hardware compatibility, benchmark latency locally."
+    title: "Audiobooks",
+    body: "Import a long text, split it into chapters, and render the whole book with one voice."
+  },
+  {
+    title: "Models",
+    body: "Install weights from Hugging Face into a local cache, see what fits your hardware, remove what you don't use."
   },
   {
     title: "Local API",
-    body: "OpenAI-compatible /v1/audio endpoints on localhost. Point existing tools at it."
+    body: "OpenAI-compatible /v1/audio endpoints on localhost. Point existing tools and SDKs at it."
   }
 ];
 ---
@@ -48,7 +61,8 @@ const workflows = [
         </h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
           Text to speech, transcription, cloning and voice design with
-          <span class="text-ink-50">{registry.adapters.length} adapters</span> for Hugging Face models.
+          <span class="text-ink-50">{runnable.length} engines you can run today</span> and
+          {registry.adapters.length - runnable.length} more on the roadmap, all from Hugging Face.
           One desktop app for Linux, macOS and Windows. One local API for everything else.
         </p>
         <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -67,12 +81,60 @@ const workflows = [
         </div>
       </div>
 
-      <div class="rounded-card border border-ink-700 bg-ink-900/80 p-5 shadow-card">
-        <div class="flex items-center justify-between">
-          <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">install</span>
-          <Waveform live client:idle />
+      <div class="overflow-hidden rounded-card border border-ink-700 bg-ink-950 shadow-card" aria-label="wave-labs desktop app">
+        <div class="flex items-center justify-between border-b border-ink-800 bg-ink-900 px-4 py-2">
+          <span class="font-mono text-[11px] text-ink-300">wave-labs</span>
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">v0.1 · desktop</span>
         </div>
-        <InstallCommand client:load className="mt-4" />
+        <div class="grid grid-cols-[9.5rem_1fr]">
+          <nav class="flex flex-col justify-between border-r border-ink-800 bg-ink-900/60 p-3" aria-hidden="true">
+            <div class="space-y-3">
+              {
+                sidebar.map((group) => (
+                  <div>
+                    {group.section && (
+                      <p class="mb-1 px-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{group.section}</p>
+                    )}
+                    <ul class="space-y-0.5">
+                      {group.items.map((item) => (
+                        <li
+                          class:list={[
+                            "rounded-md px-2 py-1 text-[12px]",
+                            item === "Speech to Text" ? "bg-ink-800 text-signal-400" : "text-ink-300"
+                          ]}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              }
+            </div>
+            <div class="mt-4 rounded-md border border-ink-800 bg-ink-950 px-2 py-1.5">
+              <p class="flex items-center gap-1.5 text-[11px] text-ink-200">
+                <span class="size-1.5 rounded-full bg-phosphor-400"></span>Engine online
+              </p>
+              <p class="font-mono text-[9px] text-ink-500">127.0.0.1:8471</p>
+            </div>
+          </nav>
+          <div class="space-y-3 p-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-ink-50">Speech to Text</span>
+              <span class="rounded border border-ink-700 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-ink-300">faster-whisper</span>
+            </div>
+            <div class="rounded-lg border border-dashed border-ink-700 p-4 text-center">
+              <Waveform live client:idle />
+              <p class="mt-2 text-[12px] text-ink-200">interview.m4a</p>
+              <p class="font-mono text-[10px] text-ink-500">wav · mp3 · flac · m4a · mp4 · mkv</p>
+            </div>
+            <div class="space-y-1.5 rounded-lg border border-ink-800 bg-ink-900 p-3 font-mono text-[11px] leading-relaxed">
+              <p><span class="text-ink-500">00:00.0</span> <span class="text-ink-200">Thanks for coming in today.</span></p>
+              <p><span class="text-ink-500">00:02.4</span> <span class="text-ink-200">Happy to be here.</span></p>
+              <p class="text-ink-500">SRT · VTT · JSON</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -80,7 +142,7 @@ const workflows = [
   <section class="mt-24">
     <div class="flex items-end justify-between">
       <h2 class="text-2xl font-semibold tracking-tight">Workflows</h2>
-      <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">desktop</span>
+      <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-400">{runnableTts} TTS · {runnableAsr} ASR engines runnable</span>
     </div>
     <div class="mt-6 grid gap-px overflow-hidden rounded-card border border-ink-700 bg-ink-700 sm:grid-cols-2 lg:grid-cols-3">
       {

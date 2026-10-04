@@ -35,7 +35,13 @@ class TTSAdapter(Protocol):
 
     def voices(self) -> list[str]: ...
 
-    def synthesize(self, text: str, voice: str | None = None, speed: float = 1.0) -> Audio: ...
+    def synthesize(
+        self,
+        text: str,
+        voice: str | None = None,
+        speed: float = 1.0,
+        reference: Path | None = None,
+    ) -> Audio: ...
 
 
 @runtime_checkable

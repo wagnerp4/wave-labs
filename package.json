@@ -9,17 +9,18 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev:web": "pnpm --filter @wavelabs/web dev",
-    "dev:desktop": "pnpm --filter @wavelabs/desktop dev",
-    "dev:desktop:tauri": "pnpm --filter @wavelabs/desktop tauri dev",
-    "build": "pnpm -r --filter \"./apps/*\" build",
-    "build:web": "pnpm --filter @wavelabs/web build",
-    "build:desktop": "pnpm --filter @wavelabs/desktop build",
-    "build:desktop:tauri": "pnpm --filter @wavelabs/desktop tauri build",
-    "typecheck": "pnpm -r typecheck",
-    "registry:validate": "pnpm --filter @wavelabs/registry validate",
+    "dev:web": "corepack pnpm --filter @wavelabs/web dev",
+    "dev:desktop": "corepack pnpm --filter @wavelabs/desktop dev",
+    "dev:desktop:tauri": "corepack pnpm --filter @wavelabs/desktop tauri dev",
+    "build": "corepack pnpm -r --filter \"./apps/*\" build",
+    "build:web": "corepack pnpm --filter @wavelabs/web build",
+    "build:desktop": "corepack pnpm --filter @wavelabs/desktop build",
+    "build:desktop:tauri": "corepack pnpm --filter @wavelabs/desktop tauri build",
+    "typecheck": "corepack pnpm -r typecheck",
+    "registry:validate": "corepack pnpm --filter @wavelabs/registry validate",
     "engine:sync": "uv sync --directory engine",
     "engine:serve": "uv run --directory engine wavelabs-engine serve",
+    "engine:serve:wsl": "uv sync --directory engine && uv run --directory engine wavelabs-engine serve --host 0.0.0.0 --port 8471",
     "engine:lint": "uv run --directory engine ruff check ."
   },
   "devDependencies": {

@@ -1,13 +1,38 @@
-import { Download, ExternalLink } from "lucide-react";
-import { useState } from "react";
-import { Badge, Button, HardwareBadges, ModelCatalog, MonoLabel } from "@wavelabs/ui";
-import { hfUrl, type Adapter, type Hardware } from "@wavelabs/registry";
+import { ExternalLink } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Badge, HardwareBadges, ModelCatalog, MonoLabel } from "@wavelabs/ui";
+import { hfUrl, findAdapter, type Adapter, type Hardware } from "@wavelabs/registry";
+import { listEngineModels, type EngineModel, type EngineState } from "../lib/engineClient.ts";
+import { ModelInstall } from "../components/ModelInstall.tsx";
 import { Panel } from "../components/Panel.tsx";
 
-export function Models({ detected }: { detected: Hardware | null }) {
-  const [selected, setSelected] = useState<Adapter | null>(null);
+export function Models({
+  engine,
+  detected
+}: {
+  engine: EngineState;
+  detected: Hardware | null;
+}) {
+  const [selected, setSelected] = useState<Adapter | null>(() => findAdapter("kokoro") ?? null);
+  const [models, setModels] = useState<EngineModel[]>([]);
   const url = selected ? hfUrl(selected) : null;
   const compatible = selected && detected ? selected.hardware.includes(detected) : null;
+  const online = engine.kind === "online";
+  const row = selected ? models.find((m) => m.id === selected.id) : undefined;
+
+  const refresh = useCallback(() => {
+    if (!online) {
+      setModels([]);
+      return;
+    }
+    void listEngineModels()
+      .then(setModels)
+      .catch(() => setModels([]));
+  }, [online]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   return (
     <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-[1fr_340px]">
@@ -46,6 +71,10 @@ export function Models({ detected }: { detected: Hardware | null }) {
                 <dd>
                   <Badge tone={selected.status === "planned" ? "neutral" : "signal"}>{selected.status}</Badge>
                 </dd>
+                <dt className="text-ink-400">Weights</dt>
+                <dd className="font-mono">{row?.downloaded ? "on disk" : "not pulled"}</dd>
+                <dt className="text-ink-400">Factory</dt>
+                <dd className="font-mono">{row?.implemented ? "yes" : "soon"}</dd>
               </dl>
 
               <div>
@@ -71,9 +100,13 @@ export function Models({ detected }: { detected: Hardware | null }) {
               )}
 
               <div className="flex flex-col gap-2 border-t border-ink-800 pt-4">
-                <Button disabled={selected.status === "planned" || !selected.hf_repo} title="Download is not wired to the engine yet">
-                  <Download className="size-4" /> Install weights
-                </Button>
+                <ModelInstall
+                  adapterId={selected.id}
+                  online={online}
+                  models={models}
+                  hfRepo={selected.hf_repo}
+                  onRefresh={refresh}
+                />
                 {url && (
                   <a
                     href={url}
@@ -84,6 +117,10 @@ export function Models({ detected }: { detected: Hardware | null }) {
                     Model card <ExternalLink className="size-3.5" />
                   </a>
                 )}
+                <p className="text-[11px] leading-relaxed text-ink-400">
+                  Pulling weights does not require a factory. Inference still needs the matching extra and an
+                  implemented adapter.
+                </p>
               </div>
             </div>
           )}

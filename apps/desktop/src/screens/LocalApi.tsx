@@ -7,7 +7,8 @@ const ENDPOINTS = [
   { method: "GET", path: "/v1/models", body: "Catalog with install state per adapter." },
   { method: "POST", path: "/v1/audio/speech", body: "OpenAI-compatible TTS. Returns wav, mp3 or pcm." },
   { method: "POST", path: "/v1/audio/transcriptions", body: "OpenAI-compatible ASR. multipart/form-data." },
-  { method: "POST", path: "/v1/models/{id}/download", body: "Pull weights from Hugging Face into the local cache." }
+  { method: "POST", path: "/v1/models/{id}/download", body: "Pull Hugging Face weights into ~/.wavelabs/models." },
+  { method: "POST", path: "/v1/voices/design", body: "Parler description-to-speaker. Returns a library voice with probe wav." }
 ];
 
 const SNIPPET = `from openai import OpenAI

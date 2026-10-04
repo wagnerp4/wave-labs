@@ -7,10 +7,11 @@ import { isTauri, startEngine } from "../lib/tauri.ts";
 import { NAV, type Screen } from "../lib/navigation.ts";
 
 const QUICK: { id: Screen; title: string; body: string }[] = [
-  { id: "studio", title: "Generate speech", body: "Script in, WAV out. Compare engines." },
-  { id: "transcribe", title: "Transcribe audio", body: "Drop files, get timestamped text." },
-  { id: "voices", title: "Clone or design a voice", body: "Reference clip or text description." },
-  { id: "audiobooks", title: "Produce an audiobook", body: "Manuscript in, chaptered audio out." }
+  { id: "studio", title: "Text to Speech", body: "Script in, WAV out. Compare engines." },
+  { id: "design", title: "Voice Creation", body: "Parler Mini. Description in, probe wav out." },
+  { id: "transcribe", title: "Speech to Text", body: "Drop files, get timestamped text." },
+  { id: "voices", title: "Clone or mix a voice", body: "Reference clip, Kokoro packs, or saved designs." },
+  { id: "audiobooks", title: "Audiobooks", body: "Manuscript in, chaptered audio out." }
 ];
 
 export function Launchpad({

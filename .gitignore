@@ -28,6 +28,7 @@ outputs/
 *.mp3
 *.flac
 !apps/web/public/**/*.wav
+!engine/src/wavelabs_engine/data/reference_voices/*.wav
 
 # Editors and OS
 .DS_Store

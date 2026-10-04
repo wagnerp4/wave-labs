@@ -28,7 +28,7 @@ wave-labs/
                                        └─────────────────────────┘
 ```
 
-The desktop frontend never imports Python. It polls `GET /health` and calls the OpenAI-compatible endpoints. That keeps the UI usable against a remote engine (Docker, another machine) with a single URL change.
+The desktop frontend never imports Python. It polls `GET /health` and calls the OpenAI-compatible endpoints. That keeps the UI usable against a remote engine (Docker, another machine, or WSL from a Windows WebView) with a single URL change. When the checkout lives in WSL, Windows must start `wavelabs-engine` via `wsl.exe` (see `scripts/windows-dev.ps1` and `WAVELABS_WSL_REPO`). Windows `uv` must not own `engine/.venv`.
 
 ## Registry
 

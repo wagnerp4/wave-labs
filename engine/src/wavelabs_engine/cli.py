@@ -12,8 +12,15 @@ def serve(
     port: int = typer.Option(settings.port),
     reload: bool = typer.Option(False, help="Auto-reload for development."),
 ) -> None:
+    import logging
+
     import uvicorn
 
+    class _SkipHealth(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            return "/health" not in record.getMessage()
+
+    logging.getLogger("uvicorn.access").addFilter(_SkipHealth())
     uvicorn.run(
         "wavelabs_engine.server:app",
         host=host,

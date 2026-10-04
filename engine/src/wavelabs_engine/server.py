@@ -17,6 +17,7 @@ def create_app() -> FastAPI:
             "tauri://localhost",
             "http://tauri.localhost",
         ],
+        allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|172\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+):1420",
         allow_methods=["*"],
         allow_headers=["*"],
     )

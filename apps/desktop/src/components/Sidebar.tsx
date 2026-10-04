@@ -1,6 +1,6 @@
 import { MonoLabel, StatusDot, Wordmark, cn } from "@wavelabs/ui";
 import type { EngineState } from "../lib/engineClient.ts";
-import { NAV, type Screen } from "../lib/navigation.ts";
+import { NAV, NAV_SECTIONS, type Screen } from "../lib/navigation.ts";
 
 export function Sidebar({
   active,
@@ -11,22 +11,17 @@ export function Sidebar({
   onNavigate: (s: Screen) => void;
   engine: EngineState;
 }) {
-  const groups = [
-    { id: "create", label: "create" },
-    { id: "manage", label: "manage" }
-  ] as const;
-
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-ink-800 bg-ink-900">
+    <aside className="flex w-60 shrink-0 flex-col border-r border-ink-800 bg-ink-900">
       <div className="flex h-14 items-center px-4">
         <Wordmark />
       </div>
 
       <nav className="flex flex-1 flex-col gap-5 px-3 py-2">
-        {groups.map((g) => (
-          <div key={g.id} className="flex flex-col gap-0.5">
-            <MonoLabel className="px-2 pb-1.5">{g.label}</MonoLabel>
-            {NAV.filter((n) => n.group === g.id).map((item) => {
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.id} className="flex flex-col gap-0.5">
+            {section.label ? <MonoLabel className="px-2 pb-1.5">{section.label}</MonoLabel> : null}
+            {NAV.filter((n) => n.group === section.id).map((item) => {
               const Icon = item.icon;
               const isActive = item.id === active;
               return (

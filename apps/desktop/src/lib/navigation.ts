@@ -9,6 +9,7 @@ import {
   Mic2,
   ScrollText,
   Settings,
+  Sparkles,
   type LucideIcon
 } from "lucide-react";
 
@@ -17,24 +18,34 @@ export type Screen =
   | "studio"
   | "transcribe"
   | "voices"
+  | "design"
   | "audiobooks"
   | "models"
   | "api"
   | "logs"
   | "settings";
 
-export type NavItem = { id: Screen; label: string; icon: LucideIcon; group: "create" | "manage" };
+export type NavGroup = "home" | "tasks" | "manage";
+
+export type NavItem = { id: Screen; label: string; icon: LucideIcon; group: NavGroup };
 
 export const NAV: NavItem[] = [
-  { id: "launchpad", label: "Launchpad", icon: Home, group: "create" },
-  { id: "studio", label: "Studio", icon: AudioLines, group: "create" },
-  { id: "transcribe", label: "Transcribe", icon: FileAudio, group: "create" },
-  { id: "voices", label: "Voices", icon: Mic2, group: "create" },
-  { id: "audiobooks", label: "Audiobooks", icon: BookOpen, group: "create" },
+  { id: "launchpad", label: "Launchpad", icon: Home, group: "home" },
+  { id: "voices", label: "Voices", icon: Mic2, group: "home" },
+  { id: "studio", label: "Studio", icon: AudioLines, group: "home" },
+  { id: "design", label: "Voice Creation", icon: Sparkles, group: "tasks" },
+  { id: "transcribe", label: "Speech to Text", icon: FileAudio, group: "tasks" },
+  { id: "audiobooks", label: "Audiobooks", icon: BookOpen, group: "tasks" },
   { id: "models", label: "Models", icon: Boxes, group: "manage" },
   { id: "api", label: "Local API", icon: Cable, group: "manage" },
   { id: "logs", label: "Logs", icon: ScrollText, group: "manage" },
   { id: "settings", label: "Settings", icon: Settings, group: "manage" }
+];
+
+export const NAV_SECTIONS: { id: NavGroup; label: string | null }[] = [
+  { id: "home", label: null },
+  { id: "tasks", label: "tasks" },
+  { id: "manage", label: "manage" }
 ];
 
 export const ACTIVITY_ICON = Activity;

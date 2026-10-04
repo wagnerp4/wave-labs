@@ -21,9 +21,19 @@ class Settings(BaseSettings):
     def outputs_dir(self) -> Path:
         return self.data_dir / "outputs"
 
+    @property
+    def voices_dir(self) -> Path:
+        return self.data_dir / "voices"
+
+    @property
+    def books_dir(self) -> Path:
+        return self.data_dir / "books"
+
     def ensure_dirs(self) -> None:
         self.models_dir.mkdir(parents=True, exist_ok=True)
         self.outputs_dir.mkdir(parents=True, exist_ok=True)
+        self.voices_dir.mkdir(parents=True, exist_ok=True)
+        self.books_dir.mkdir(parents=True, exist_ok=True)
 
 
 settings = Settings()

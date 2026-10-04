@@ -22,9 +22,12 @@ jobs:
             args: ""
           - platform: macos-latest
             artifact: macos-arm64
+            target: aarch64-apple-darwin
             args: "--target aarch64-apple-darwin"
-          - platform: macos-13
+          # macos-13 runners are retired; cross-compile Intel builds on Apple Silicon.
+          - platform: macos-latest
             artifact: macos-x64
+            target: x86_64-apple-darwin
             args: "--target x86_64-apple-darwin"
     runs-on: ${{ matrix.platform }}
     steps:
@@ -44,9 +47,12 @@ jobs:
           node-version: 20
           cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target || '' }}
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: apps/desktop/src-tauri
+          key: ${{ matrix.artifact }}
 
       - run: pnpm install --frozen-lockfile
 
@@ -59,8 +65,11 @@ jobs:
           projectPath: apps/desktop
           tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
           releaseName: "wave-labs ${{ github.ref_name }}"
-          releaseBody: "Desktop installers for Linux (AppImage, deb, rpm), Windows (msi, nsis) and macOS (dmg)."
-          releaseDraft: true
+          releaseBody: |
+            Desktop installers for Linux (AppImage, deb, rpm), Windows (msi, exe) and macOS (dmg, Apple Silicon and Intel).
+
+            The speech engine is not bundled yet. Install [uv](https://docs.astral.sh/uv/), clone this repository and set `WAVELABS_ENGINE_DIR` to its `engine/` folder, or run `uv run wavelabs-engine serve` there before opening the app.
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
 

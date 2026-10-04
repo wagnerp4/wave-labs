@@ -12,17 +12,21 @@ dependencies = [
     "pydantic>=2.9",
     "pydantic-settings>=2.6",
     "python-multipart>=0.0.17",
-    "huggingface-hub>=0.26",
+    "huggingface-hub>=0.26,<1",
     "numpy>=1.26",
     "soundfile>=0.12",
     "typer>=0.15",
+    "torch>=2.4",
+    "torchaudio>=2.4",
+    "kokoro>=0.9",
+    "transformers>=4.46.1,<4.47",
+    "parler-tts>=0.2",
+    "sentencepiece>=0.2",
 ]
 
 [project.optional-dependencies]
-torch = ["torch>=2.4", "torchaudio>=2.4"]
-kokoro = ["kokoro>=0.9", "soundfile>=0.12"]
 whisper = ["faster-whisper>=1.1"]
-all = ["wavelabs-engine[torch,kokoro,whisper]"]
+studio = ["wavelabs-engine[whisper]"]
 
 [project.scripts]
 wavelabs-engine = "wavelabs_engine.cli:app"

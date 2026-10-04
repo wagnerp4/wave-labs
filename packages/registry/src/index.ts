@@ -45,3 +45,22 @@ export function searchAdapters(query: string, task: Task | "all" = "all"): Adapt
 export function hfUrl(adapter: Adapter): string | null {
   return adapter.hf_repo ? `https://huggingface.co/${adapter.hf_repo}` : null;
 }
+
+export function adapterUrl(adapter: Adapter): string | null {
+  return hfUrl(adapter) ?? adapter.homepage;
+}
+
+export function adapterLinkLabel(adapter: Adapter): string {
+  if (adapter.hf_repo) {
+    const name = adapter.hf_repo.split("/").pop();
+    return name || adapter.hf_repo;
+  }
+  if (adapter.homepage) {
+    try {
+      return new URL(adapter.homepage).hostname.replace(/^www\./, "");
+    } catch {
+      return "docs";
+    }
+  }
+  return "docs";
+}

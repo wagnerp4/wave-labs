@@ -1,9 +1,21 @@
 import { Download, Play, Square } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
-import { Badge, Button, HardwareBadges, MonoLabel, Waveform, cn } from "@wavelabs/ui";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Button, HardwareBadges, MonoLabel, Waveform } from "@wavelabs/ui";
 import { adaptersByTask, type Adapter, type Hardware } from "@wavelabs/registry";
-import { synthesize, type EngineState } from "../lib/engineClient.ts";
+import {
+  isImplemented,
+  listEngineModels,
+  listVoices,
+  synthesize,
+  DEFAULT_TTS_MODEL,
+  DEFAULT_TTS_VOICE,
+  type EngineModel,
+  type EngineState,
+  type VoiceRecord
+} from "../lib/engineClient.ts";
 import { EmptyState, Panel } from "../components/Panel.tsx";
+import { EnginePick } from "../components/EnginePick.tsx";
+import { ModelInstall } from "../components/ModelInstall.tsx";
 
 type Take = { id: string; adapter: string; text: string; url: string; createdAt: number };
 
@@ -12,8 +24,11 @@ const SAMPLE =
 
 export function Studio({ engine, detected }: { engine: EngineState; detected: Hardware | null }) {
   const tts = useMemo(() => adaptersByTask("tts").filter((a) => a.connection === "local"), []);
-  const [adapterId, setAdapterId] = useState<string>(tts.find((a) => a.status !== "planned")?.id ?? tts[0]?.id ?? "");
+  const [models, setModels] = useState<EngineModel[]>([]);
+  const [adapterId, setAdapterId] = useState<string>(DEFAULT_TTS_MODEL);
   const [text, setText] = useState(SAMPLE);
+  const [voiceId, setVoiceId] = useState(DEFAULT_TTS_VOICE);
+  const [voices, setVoices] = useState<VoiceRecord[]>([]);
   const [speed, setSpeed] = useState(1);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,14 +38,57 @@ export function Studio({ engine, detected }: { engine: EngineState; detected: Ha
 
   const adapter: Adapter | undefined = tts.find((a) => a.id === adapterId);
   const online = engine.kind === "online";
-  const canRun = online && adapter && adapter.status !== "planned" && text.trim().length > 0 && !busy;
+  const ready = adapter ? isImplemented(adapter.id, models) : false;
+  const cloning =
+    adapter?.features.includes("voice cloning") || adapter?.features.includes("zero-shot cloning");
+  const designing = adapter?.id === "parler-tts";
+  const needsReference = Boolean(cloning);
+  const canRun =
+    online &&
+    adapter &&
+    ready &&
+    text.trim().length > 0 &&
+    !busy &&
+    (!needsReference || voices.some((v) => v.id === voiceId && v.has_audio)) &&
+    (!designing || voices.some((v) => v.id === voiceId));
+
+  useEffect(() => {
+    if (!online) {
+      setModels([]);
+      return;
+    }
+    void listEngineModels()
+      .then(setModels)
+      .catch(() => setModels([]));
+  }, [online]);
+
+  useEffect(() => {
+    if (!online || !adapter) {
+      setVoices([]);
+      return;
+    }
+    void listVoices()
+      .then((all) => {
+        const next = cloning
+          ? all.filter((v) => v.kind === "clone" && v.has_audio)
+          : designing
+            ? all.filter((v) => v.kind === "design" && v.adapter === "parler-tts")
+            : all.filter((v) => v.kind === "preset" && v.adapter === adapter.id);
+        setVoices(next);
+        setVoiceId((current) => (next.some((v) => v.id === current) ? current : (next[0]?.id ?? DEFAULT_TTS_VOICE)));
+      })
+      .catch(() => {
+        setVoices([]);
+        setVoiceId(DEFAULT_TTS_VOICE);
+      });
+  }, [online, adapter, adapterId, cloning, designing]);
 
   async function run() {
     if (!adapter) return;
     setBusy(true);
     setError(null);
     try {
-      const blob = await synthesize({ model: adapter.id, text, speed });
+      const blob = await synthesize({ model: adapter.id, text, voice: voiceId, speed });
       const url = URL.createObjectURL(blob);
       setTakes((t) => [{ id: crypto.randomUUID(), adapter: adapter.id, text, url, createdAt: Date.now() }, ...t]);
     } catch (e) {
@@ -72,9 +130,13 @@ export function Studio({ engine, detected }: { engine: EngineState; detected: Ha
             <p className="text-[12px] text-ink-400">
               {!online
                 ? "Engine offline. Generation is disabled until the local API responds."
-                : adapter?.status === "planned"
-                  ? "This adapter is in the catalog but not implemented yet."
-                  : "Ready."}
+                : !ready
+                  ? "Listed in the catalog. This engine build has no factory. Restart serve after updating the repo."
+                  : needsReference && voices.length === 0
+                    ? "Add a cloned clip in Voices, then select it."
+                    : designing && voices.length === 0
+                      ? "Create a voice in Voice Creation, then select it here."
+                      : "Ready."}
             </p>
             <Button onClick={run} disabled={!canRun}>
               {busy ? <Waveform live bars={5} className="h-4" /> : <Play className="size-4" />}
@@ -128,26 +190,30 @@ export function Studio({ engine, detected }: { engine: EngineState; detected: Ha
         <Panel label="engine" action={<span className="font-mono text-[10px] text-ink-400">{tts.length}</span>}>
           <div className="-mr-2 flex max-h-72 flex-col gap-1 overflow-y-auto pr-2">
             {tts.map((a) => (
-              <button
+              <EnginePick
                 key={a.id}
-                type="button"
-                onClick={() => setAdapterId(a.id)}
-                className={cn(
-                  "vl-focus flex items-center justify-between rounded-md px-2.5 py-2 text-left text-[13px] transition-colors",
-                  a.id === adapterId ? "bg-ink-800 text-ink-50" : "text-ink-300 hover:bg-ink-850"
-                )}
-              >
-                <span className="truncate">{a.name}</span>
-                <Badge tone={a.status === "planned" ? "neutral" : "signal"} className="ml-2 shrink-0">
-                  {a.status === "planned" ? "soon" : a.status}
-                </Badge>
-              </button>
+                adapter={a}
+                active={a.id === adapterId}
+                implemented={isImplemented(a.id, models)}
+                onSelect={() => setAdapterId(a.id)}
+              />
             ))}
           </div>
           {adapter && (
             <div className="mt-2 flex flex-col gap-2 border-t border-ink-800 pt-3">
               <p className="text-[12px] leading-relaxed text-ink-300">{adapter.description}</p>
               <HardwareBadges supported={adapter.hardware} detected={detected} />
+              <ModelInstall
+                adapterId={adapter.id}
+                online={online}
+                models={models}
+                hfRepo={adapter.hf_repo}
+                onRefresh={() => {
+                  void listEngineModels()
+                    .then(setModels)
+                    .catch(() => setModels([]));
+                }}
+              />
             </div>
           )}
         </Panel>
@@ -155,11 +221,21 @@ export function Studio({ engine, detected }: { engine: EngineState; detected: Ha
         <Panel label="voice">
           <select
             className="vl-focus h-9 rounded-md border border-ink-700 bg-ink-950 px-2 text-[13px]"
-            defaultValue="default"
-            disabled
-            title="Voice listing per adapter is not implemented yet"
+            value={voiceId}
+            disabled={!online || voices.length === 0}
+            onChange={(e) => setVoiceId(e.target.value)}
           >
-            <option value="default">default</option>
+            {voices.length === 0 ? (
+              <option value={voiceId}>
+                {online ? (cloning ? "no clone yet" : designing ? "no design yet" : "no presets") : "engine offline"}
+              </option>
+            ) : (
+              voices.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.name}
+                </option>
+              ))
+            )}
           </select>
           <label className="flex flex-col gap-1.5 text-[12px] text-ink-300">
             <span className="flex justify-between">

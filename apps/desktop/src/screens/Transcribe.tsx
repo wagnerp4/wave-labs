@@ -1,9 +1,17 @@
 import { FileAudio, Upload } from "lucide-react";
-import { useMemo, useState, type DragEvent } from "react";
-import { Badge, Button, cn } from "@wavelabs/ui";
+import { useEffect, useMemo, useState, type DragEvent } from "react";
+import { Button, cn } from "@wavelabs/ui";
 import { adaptersByTask } from "@wavelabs/registry";
-import { transcribe, type EngineState } from "../lib/engineClient.ts";
+import {
+  isImplemented,
+  listEngineModels,
+  transcribe,
+  type EngineModel,
+  type EngineState
+} from "../lib/engineClient.ts";
 import { EmptyState, Panel } from "../components/Panel.tsx";
+import { EnginePick } from "../components/EnginePick.tsx";
+import { ModelInstall } from "../components/ModelInstall.tsx";
 
 type Segment = { start: number; end: number; text: string };
 
@@ -15,7 +23,8 @@ function fmt(s: number): string {
 
 export function Transcribe({ engine }: { engine: EngineState }) {
   const asr = useMemo(() => adaptersByTask("asr").filter((a) => a.connection === "local"), []);
-  const [adapterId, setAdapterId] = useState(asr.find((a) => a.status !== "planned")?.id ?? asr[0]?.id ?? "");
+  const [models, setModels] = useState<EngineModel[]>([]);
+  const [adapterId, setAdapterId] = useState("faster-whisper");
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -24,7 +33,18 @@ export function Transcribe({ engine }: { engine: EngineState }) {
 
   const adapter = asr.find((a) => a.id === adapterId);
   const online = engine.kind === "online";
-  const canRun = online && file && adapter && adapter.status !== "planned" && !busy;
+  const ready = adapter ? isImplemented(adapter.id, models) : false;
+  const canRun = online && file && adapter && ready && !busy;
+
+  useEffect(() => {
+    if (!online) {
+      setModels([]);
+      return;
+    }
+    void listEngineModels()
+      .then(setModels)
+      .catch(() => setModels([]));
+  }, [online]);
 
   function onDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -89,7 +109,11 @@ export function Transcribe({ engine }: { engine: EngineState }) {
           </div>
           <div className="flex items-center justify-between">
             <p className="text-[12px] text-ink-400">
-              {!online ? "Engine offline." : adapter?.status === "planned" ? "Adapter not implemented yet." : "Ready."}
+              {!online
+                ? "Engine offline."
+                : !ready
+                  ? "Listed in the catalog. This engine build has no factory."
+                  : "Ready."}
             </p>
             <Button onClick={run} disabled={!canRun}>
               {busy ? "Transcribing" : "Transcribe"}
@@ -121,23 +145,29 @@ export function Transcribe({ engine }: { engine: EngineState }) {
       <Panel label="engine" action={<span className="font-mono text-[10px] text-ink-400">{asr.length}</span>}>
         <div className="-mr-2 flex max-h-72 flex-col gap-1 overflow-y-auto pr-2">
           {asr.map((a) => (
-            <button
+            <EnginePick
               key={a.id}
-              type="button"
-              onClick={() => setAdapterId(a.id)}
-              className={cn(
-                "vl-focus flex items-center justify-between rounded-md px-2.5 py-2 text-left text-[13px] transition-colors",
-                a.id === adapterId ? "bg-ink-800 text-ink-50" : "text-ink-300 hover:bg-ink-850"
-              )}
-            >
-              <span className="truncate">{a.name}</span>
-              <Badge tone={a.status === "planned" ? "neutral" : "signal"} className="ml-2 shrink-0">
-                {a.status === "planned" ? "soon" : a.status}
-              </Badge>
-            </button>
+              adapter={a}
+              active={a.id === adapterId}
+              implemented={isImplemented(a.id, models)}
+              onSelect={() => setAdapterId(a.id)}
+            />
           ))}
         </div>
         {adapter && <p className="border-t border-ink-800 pt-3 text-[12px] leading-relaxed text-ink-300">{adapter.description}</p>}
+        {adapter && (
+          <ModelInstall
+            adapterId={adapter.id}
+            online={online}
+            models={models}
+            hfRepo={adapter.hf_repo}
+            onRefresh={() => {
+              void listEngineModels()
+                .then(setModels)
+                .catch(() => setModels([]));
+            }}
+          />
+        )}
       </Panel>
     </div>
   );

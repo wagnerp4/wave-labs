@@ -28,12 +28,17 @@ Source: `docs/TLT.md`. License: AGPL-3.0. Competitors in scope: ElevenLabs, Voic
 ## Voices
 
 - [x] Local library UI (preset cards)
-- [ ] Store + import + cloud
-- [ ] Create, combine, capture, play
+- [x] Local store + clip import + text design (`~/.wavelabs/voices`, `GET/POST /v1/voices`)
+- [ ] Cloud / store marketplace
+- [x] Clone reference path wired into Chatterbox / XTTS / F5-TTS / CosyVoice / Fish Speech
+- [ ] Persist per-voice embeddings next to `voice.json` (still prompt-from-wav)
+- [x] Parler-TTS design synthesis (`POST /v1/voices/design`, Design screen)
+- [x] Play presets (kokoro) and reference clips
 
 ## Audiobooks
 
 - [x] Desktop screen shell
-- [ ] Manuscript import (txt, md, epub)
-- [ ] Casting board
-- [ ] Chapter render + M4B export
+- [x] Manuscript import (txt, md, epub) into `~/.wavelabs/books`
+- [x] Casting board (Kokoro presets / detected roles)
+- [x] Chapter WAV render via Kokoro
+- [ ] Concatenated book WAV / M4B export

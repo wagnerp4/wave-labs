@@ -1,7 +1,10 @@
+import logging
 from pathlib import Path
 
 from ..registry import AdapterSpec
 from .base import Segment, Transcript
+
+log = logging.getLogger(__name__)
 
 
 class FasterWhisperAdapter:
@@ -18,7 +21,11 @@ class FasterWhisperAdapter:
             raise RuntimeError(msg) from exc
         target = "cuda" if device == "cuda" else "cpu"
         compute = "float16" if target == "cuda" else "int8"
-        self._model = WhisperModel(self.size, device=target, compute_type=compute)
+        size = self.size
+        if target == "cpu" and size == "large-v3":
+            size = "small"
+            log.warning("faster-whisper: loading 'small' on CPU. large-v3 needs CUDA or more RAM.")
+        self._model = WhisperModel(size, device=target, compute_type=compute)
 
     def transcribe(self, audio: Path, language: str | None = None) -> Transcript:
         if self._model is None:
@@ -32,3 +39,4 @@ class FasterWhisperAdapter:
 
 # TODO: expose word_timestamps and beam_size as request options.
 # TODO: honour settings.models_dir via download_root so weights live in the app cache.
+# TODO: honour WAVELABS_WHISPER_SIZE / spec.hf_repo instead of the CPU small fallback.

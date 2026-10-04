@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 const host = process.env.TAURI_DEV_HOST;
+const inWsl = Boolean(process.env.WSL_DISTRO_NAME || process.env.WSL_INTEROP);
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -10,10 +11,14 @@ export default defineConfig({
   server: {
     port: 1420,
     strictPort: true,
-    host: host || false,
+    host: host || (inWsl ? "0.0.0.0" : false),
     hmr: host ? { protocol: "ws", host, port: 1421 } : undefined,
     watch: {
       ignored: ["**/src-tauri/**"]
+    },
+    proxy: {
+      "/health": { target: "http://127.0.0.1:8471", changeOrigin: true },
+      "/v1": { target: "http://127.0.0.1:8471", changeOrigin: true }
     }
   },
   envPrefix: ["VITE_", "TAURI_ENV_*"],

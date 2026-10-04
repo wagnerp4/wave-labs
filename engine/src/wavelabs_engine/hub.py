@@ -1,8 +1,11 @@
+import threading
 from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
 from .config import settings
+
+_DOWNLOAD_LOCK = threading.Lock()
 
 
 def download(
@@ -11,12 +14,13 @@ def download(
     allow_patterns: list[str] | None = None,
 ) -> Path:
     settings.ensure_dirs()
-    path = snapshot_download(
-        repo_id=repo_id,
-        revision=revision,
-        cache_dir=str(settings.models_dir),
-        allow_patterns=allow_patterns,
-    )
+    with _DOWNLOAD_LOCK:
+        path = snapshot_download(
+            repo_id=repo_id,
+            revision=revision,
+            cache_dir=str(settings.models_dir),
+            allow_patterns=allow_patterns,
+        )
     return Path(path)
 
 
